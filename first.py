@@ -726,45 +726,91 @@ with col2:
             else:
                 st.image(Image.new('RGB', (100, 100), color='lightgray'), width=100)
         
+        with col_header2:
+            st.markdown(f"<h2 style='margin-top:0;'>{st.session_state.resume_data.get('name', '姓名未填写')}</h2>", unsafe_allow_html=True)
+            st.markdown(f"<p style='color:#666;margin-top:-10px;'>{st.session_state.resume_data.get('title', '职位未填写')}</p>", unsafe_allow_html=True)
+        
+        st.divider()
+        
         # 基本信息
-        st.markdown('<p class="section-title">基本信息</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">📝 基本信息</p>', unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
-            st.text(f"年龄: {st.session_state.resume_data['age'] or '未填写'}")
-            st.text(f"性别: {st.session_state.resume_data['gender'] or '未填写'}")
+            st.markdown(f"<p><span class='item-title'>年龄:</span> {st.session_state.resume_data.get('age', '未填写')}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p><span class='item-title'>性别:</span> {st.session_state.resume_data.get('gender', '未填写')}</p>", unsafe_allow_html=True)
         with cols[1]:
-            st.text(f"邮箱: {st.session_state.resume_data['email'] or '未填写'}")
-            st.text(f"电话: {st.session_state.resume_data['phone'] or '010-0000-0001'}")
+            st.markdown(f"<p><span class='item-title'>邮箱:</span> {st.session_state.resume_data.get('email', '未填写')}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p><span class='item-title'>电话:</span> {st.session_state.resume_data.get('phone', '010-0000-0001')}</p>", unsafe_allow_html=True)
         
         st.divider()
         
         # 个人信息
-        st.markdown('<p class="section-title">个人信息</p>', unsafe_allow_html=True)
+        st.markdown('<p class="section-title">ℹ️ 个人信息</p>', unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
-            st.text(f"出生日期: {st.session_state.resume_data['birth_date'] or '未填写'}")
+            st.markdown(f"<p><span class='item-title'>出生日期:</span> {st.session_state.resume_data.get('birth_date', '未填写')}</p>", unsafe_allow_html=True)
         with cols[1]:
-            st.text(f"工作地点: {st.session_state.resume_data['work_location'] or '未填写'}")
+            st.markdown(f"<p><span class='item-title'>工作地点:</span> {st.session_state.resume_data.get('work_location', '未填写')}</p>", unsafe_allow_html=True)
         
         st.divider()
         
         # 个人简介
-        st.markdown('<p class="section-title">个人简介</p>', unsafe_allow_html=True)
-        st.text(st.session_state.resume_data['bio'] or "请简要介绍自己...")
+        st.markdown('<p class="section-title">✨ 个人简介</p>', unsafe_allow_html=True)
+        st.markdown(f"<div class='item-description'>{st.session_state.resume_data.get('bio', '请简要介绍自己...')}</div>", unsafe_allow_html=True)
+        
+        st.divider()
+        
+        # 教育背景
+        st.markdown('<p class="section-title">🎓 教育背景</p>', unsafe_allow_html=True)
+        if st.session_state.resume_data.get('education'):
+            for edu in st.session_state.resume_data['education']:
+                st.markdown(f"<p class='item-title'>{edu.get('school', '学校未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-subtitle'>{edu.get('degree', '')} | {edu.get('major', '专业未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-duration'>{edu.get('start_date', '')} - {edu.get('end_date', '')}</p>", unsafe_allow_html=True)
+                if edu.get('description'):
+                    st.markdown(f"<p class='item-description'>{edu['description']}</p>", unsafe_allow_html=True)
+                st.text("")
+        else:
+            st.markdown("<p class='empty-field'>未填写教育背景</p>", unsafe_allow_html=True)
+        
+        st.divider()
+        
+        # 工作经历
+        st.markdown('<p class="section-title">💼 工作经历</p>', unsafe_allow_html=True)
+        if st.session_state.resume_data.get('work_experience'):
+            for work in st.session_state.resume_data['work_experience']:
+                st.markdown(f"<p class='item-title'>{work.get('company', '公司未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-subtitle'>{work.get('position', '职位未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-duration'>{work.get('start_date', '')} - {work.get('end_date', '')}</p>", unsafe_allow_html=True)
+                if work.get('description'):
+                    st.markdown(f"<p class='item-description'>{work['description']}</p>", unsafe_allow_html=True)
+                st.text("")
+        else:
+            st.markdown("<p class='empty-field'>未填写工作经历</p>", unsafe_allow_html=True)
+        
+        st.divider()
+        
+        # 技能专长
+        st.markdown('<p class="section-title">🛠️ 技能专长</p>', unsafe_allow_html=True)
+        if st.session_state.resume_data.get('skills'):
+            skills_html = "".join([f"<span class='skill-badge'>{skill}</span>" for skill in st.session_state.resume_data['skills']])
+            st.markdown(f"<div>{skills_html}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown("<p class='empty-field'>未填写技能专长</p>", unsafe_allow_html=True)
+        
+        st.divider()
+        
+        # 项目经验
+        st.markdown('<p class="section-title">📂 项目经验</p>', unsafe_allow_html=True)
+        if st.session_state.resume_data.get('projects'):
+            for project in st.session_state.resume_data['projects']:
+                st.markdown(f"<p class='item-title'>{project.get('name', '项目名称未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-subtitle'>{project.get('role', '角色未填写')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p class='item-duration'>{project.get('start_date', '')} - {project.get('end_date', '')}</p>", unsafe_allow_html=True)
+                if project.get('description'):
+                    st.markdown(f"<p class='item-description'>{project['description']}</p>", unsafe_allow_html=True)
+                st.text("")
+        else:
+            st.markdown("<p class='empty-field'>未填写项目经验</p>", unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
-
-
-
-
-
-###=====================================================================
-# 请在此段代码上方添加新代码！
-# 添加页脚
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; font-size: 0.9rem;">
-    <p>© 2025 个人网页制作演示 | CPU180 版本号：0.6.13.4</p>
-</div>
-""", unsafe_allow_html=True)
-###=====================================================================
